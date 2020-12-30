@@ -6,6 +6,14 @@
 
     <bean id="user" class="com.example.client.entity.User"></bean>
     <bean id="userService" class="com.example.client.service.UserServiceImpl"></bean>
-    <bean id="serviceProxy" class="com.example.client.rpcproxy.ServiceProxy"></bean>
     <bean id="httpClientService" class="com.example.client.http.HttpClientService"></bean>
+
+    <bean id="serviceDiscovery" class="com.example.register.discover.ZooKeeperServiceDiscovery">
+        <constructor-arg name="zkAddress" value="localhost:2181"/>
+    </bean>
+
+    <bean id="serviceProxy" class="com.example.client.rpcproxy.ServiceProxy">
+        <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
+    </bean>
+
 </beans>

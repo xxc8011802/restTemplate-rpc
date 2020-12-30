@@ -1,10 +1,15 @@
 package com.example.client.rpcproxy;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.api.rpc.RpcParams;
 import com.example.api.rpc.RpcResult;
 import com.example.client.http.ClassUtil;
 import com.example.client.http.HttpClientService;
+import com.example.register.discover.ServiceDiscovery;
+import com.example.register.discover.ZooKeeperServiceDiscovery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.InvocationHandler;
@@ -17,11 +22,25 @@ import java.lang.reflect.Proxy;
 
 public class ServiceProxy
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceProxy.class);
+
     @Autowired
     HttpClientService httpClientService;
 
+    private String serviceAddress;
+
+    private ServiceDiscovery serviceDiscovery;
+
     public ServiceProxy(){
 
+    }
+
+    public ServiceProxy(String serviceAddress) {
+        this.serviceAddress = serviceAddress;
+    }
+
+    public ServiceProxy(ServiceDiscovery serviceDiscovery) {
+        this.serviceDiscovery = serviceDiscovery;
     }
 
     @SuppressWarnings("unchecked")
@@ -63,11 +82,22 @@ public class ServiceProxy
                 // 获得服务的主机名和端口号，之后可通过服务发现的方式来获取服务的ip和端口号
                 String host = "localhost";
                 String port = "9091";
-                String url = host+":"+port;
-                url="http://localhost:9091/";
+                String url="http://localhost:9091/";
+                //服务发现
+                if (serviceDiscovery != null) {
+                    String serviceName = interfaceClass.getName();
+                    if (StrUtil.isNotEmpty(serviceVersion)) {
+                        serviceName += "-" + serviceVersion;
+                    }
+                    serviceAddress = serviceDiscovery.discover(serviceName);
+                    url = "http://"+serviceAddress;
+                    LOGGER.debug("discover service: {} => {}", serviceName, serviceAddress);
+                }
+                if (StrUtil.isEmpty(serviceAddress)) {
+                    throw new RuntimeException("server address is empty");
+                }
+
                 // 创建 RPC 客户端对象并发送 RPC 请求
-/*                ApplicationContext context = new ClassPathXmlApplicationContext("serviceBean.xml");
-                HttpClientService httpClientService = context.getBean(HttpClientService.class);*/
                 RpcResult rpcResult = httpClientService.send(url,rpcParams);
                 //响应的rpc的ResultValue是json类型的,需要转换为需要的类型
                 Object value = JSONObject.parseObject(rpcResult.getRpcResultValue(),ClassUtil.getArgTypeClass(rpcResult.getRpcResultType()));

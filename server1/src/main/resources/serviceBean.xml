@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="serviceRegistry" class="com.example.register.register.ZooKeeperServiceRegistry">
+        <constructor-arg name="zkAddress" value="localhost:2181"/>
+    </bean>
+
+    <!--serviceAddress表示服务的端口和地址-->
+    <bean id="rpcServiceMapper" class="com.example.server1.rpc.RpcServiceMapper">
+        <constructor-arg name="serviceAddress" value="localhost:9091"/>
+        <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
+    </bean>
+
+</beans>
