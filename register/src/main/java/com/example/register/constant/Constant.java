@@ -3,8 +3,6 @@ package com.example.register.constant;
 /**
  * 常量
  *
- * @author huangyong
- * @since 1.0.0
  */
 public interface Constant
 {
