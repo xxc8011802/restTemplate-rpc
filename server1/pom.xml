@@ -57,7 +57,7 @@
             <artifactId>register</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <!--register包-->
+        <!--rpc包-->
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>rpc</artifactId>

@@ -3,9 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="serviceRegistry" class="com.example.register.register.ZooKeeperServiceRegistry">
+    <import resource="classpath*:rpcbean.xml"></import>
+
+<!--    <bean id="serviceRegistry" class="com.example.register.register.ZooKeeperServiceRegistry">
         <constructor-arg name="zkAddress" value="localhost:2181"/>
-    </bean>
+    </bean>-->
 
     <!--serviceAddress表示服务的端口和地址-->
    <!-- <bean id="rpcServer" class="com.example.server2.rpc.RpcServer">

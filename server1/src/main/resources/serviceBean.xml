@@ -13,4 +13,5 @@
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>-->
 
+    <import resource="classpath*:rpcbean.xml"></import>
 </beans>
