@@ -1,4 +1,4 @@
-package com.example.server1.rpc;
+package com.example.server2.rpc;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
@@ -13,8 +13,7 @@ import java.util.Map;
 /**
  * 存放接口和实现类的映射关系
  */
-/*@Component*/
-public class RpcServiceMapper implements ApplicationContextAware, InitializingBean
+public class RpcServer implements ApplicationContextAware, InitializingBean
 {
     private static ApplicationContext applicationContext;
     /**
@@ -26,17 +25,16 @@ public class RpcServiceMapper implements ApplicationContextAware, InitializingBe
 
     private ServiceRegistry serviceRegistry;
 
-    public  RpcServiceMapper(){
+    public RpcServer(){
 
     }
 
     //构造函数注入 服务地址
-    public RpcServiceMapper(String serviceAddress){
+    public RpcServer(String serviceAddress){
         this.serviceAddress=serviceAddress;
     }
 
-    //
-    public RpcServiceMapper(String serviceAddress, ServiceRegistry serviceRegistry)
+    public RpcServer(String serviceAddress, ServiceRegistry serviceRegistry)
     {
         this.serviceAddress = serviceAddress;
         this.serviceRegistry = serviceRegistry;

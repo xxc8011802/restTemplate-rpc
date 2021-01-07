@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
 
 /**
  * rpc代理类，代理需要调用的方法，是的可以屏蔽底层的http调用，服务发现，序列化这些操作

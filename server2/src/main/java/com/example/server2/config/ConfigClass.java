@@ -1,4 +1,4 @@
-package com.example.client.config;
+package com.example.server2.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +13,4 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource(locations = {"classpath:serviceBean.xml"})
 public class ConfigClass
 {
-    /**
-     * 服务优雅下线关闭配置
-     * @return
-     */
-    @Bean
-    public ShutDown getShutDown() {
-        return new ShutDown();
-    }
 }

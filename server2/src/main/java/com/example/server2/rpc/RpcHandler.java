@@ -1,4 +1,4 @@
-package com.example.server1.rpc;
+package com.example.server2.rpc;
 
 import com.alibaba.fastjson.JSON;
 import com.example.api.rpc.RpcParams;

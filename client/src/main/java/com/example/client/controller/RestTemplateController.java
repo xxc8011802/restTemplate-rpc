@@ -2,6 +2,7 @@ package com.example.client.controller;
 
 import com.alibaba.fastjson.JSONObject;
 
+import com.example.api.bean.CompanyService;
 import com.example.api.bean.User;
 import com.example.api.bean.UserService;
 import com.example.client.rpcproxy.ServiceProxy;
@@ -94,7 +95,9 @@ public class RestTemplateController
         ServiceProxy serviceProxy = context.getBean(ServiceProxy.class);
         UserService userService = serviceProxy.create(UserService.class);
         User user = userService.getUserInfo(new User("xxc",2));
-        return user;
+        CompanyService companyService = serviceProxy.create(CompanyService.class);
+        String companyName = companyService.getCompanyName("mi");
+        return companyName+user.toString();
     }
 
 
