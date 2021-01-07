@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.server2.rpc.RpcHandler.getResult;
+import static com.example.rpc.server.RpcHandler.getResult;
 
 /**
  * 接收rpc服务调用请求

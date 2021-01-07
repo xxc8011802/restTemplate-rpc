@@ -1,4 +1,4 @@
-package com.example.server2.rpc;
+package com.example.rpc.server;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
@@ -34,6 +34,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean
         this.serviceAddress=serviceAddress;
     }
 
+    //
     public RpcServer(String serviceAddress, ServiceRegistry serviceRegistry)
     {
         this.serviceAddress = serviceAddress;

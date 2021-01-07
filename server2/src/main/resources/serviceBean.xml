@@ -8,10 +8,10 @@
     </bean>
 
     <!--serviceAddress表示服务的端口和地址-->
-    <bean id="rpcServer" class="com.example.server2.rpc.RpcServer">
+   <!-- <bean id="rpcServer" class="com.example.server2.rpc.RpcServer">
         <constructor-arg name="serviceAddress" value="localhost:9092"/>
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
-    </bean>
+    </bean>-->
 
     <!--服务优雅下线关闭配置-->
     <bean id="shutdown" class="com.example.server2.config.ShutDown">

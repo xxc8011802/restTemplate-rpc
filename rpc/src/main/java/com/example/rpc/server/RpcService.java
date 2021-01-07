@@ -1,4 +1,4 @@
-package com.example.server2.rpc;
+package com.example.rpc.server;
 
 import org.springframework.stereotype.Component;
 

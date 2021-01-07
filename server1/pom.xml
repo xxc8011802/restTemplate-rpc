@@ -57,6 +57,12 @@
             <artifactId>register</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--register包-->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>rpc</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
