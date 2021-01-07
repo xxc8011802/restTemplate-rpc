@@ -3,17 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <import resource="classpath*:rpcbean.xml"></import>
 
     <bean id="user" class="com.example.client.entity.User"></bean>
     <bean id="userService" class="com.example.client.service.UserServiceImpl"></bean>
-    <bean id="httpClientService" class="com.example.client.http.HttpClientService"></bean>
 
-    <bean id="serviceDiscovery" class="com.example.register.discover.ZooKeeperServiceDiscovery">
+
+<!--    <bean id="serviceDiscovery" class="com.example.register.discover.ZooKeeperServiceDiscovery">
         <constructor-arg name="zkAddress" value="localhost:2181"/>
     </bean>
 
     <bean id="serviceProxy" class="com.example.client.rpcproxy.ServiceProxy">
         <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
-    </bean>
+    </bean>-->
 
 </beans>

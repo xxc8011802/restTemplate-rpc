@@ -17,6 +17,7 @@
 
     <modules>
         <module>client</module>
+        <module>rpc</module>
         <module>server1</module>
         <module>server2</module>
     </modules>

@@ -1,4 +1,4 @@
-package com.example.client.http;
+package com.example.rpc.http;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -53,6 +53,10 @@ public class RestTemplateConfig
         return new RestTemplate(factory);
     }*/
 
+    /**
+     * 该包加入到rpcbean中，别的包在加载bean的时候才会去加载一个可用的bean
+     * @return
+     */
     @Bean
     public RestTemplate restTemplate(){
         return new RestTemplate(simpleClientHttpRequestFactory());

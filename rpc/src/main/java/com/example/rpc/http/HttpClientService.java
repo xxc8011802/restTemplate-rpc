@@ -1,4 +1,4 @@
-package com.example.client.http;
+package com.example.rpc.http;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.api.rpc.RpcParams;
@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * restTemplate 提供http调用的service
  */
+/*@Component*/
 public class HttpClientService
 {
     @Autowired
@@ -24,17 +25,17 @@ public class HttpClientService
      * @return
      * @throws Exception
      */
-/*    public RpcResult doGet(String url) throws Exception{
+    public RpcResult doGet(String url) throws Exception{
         String result = restTemplate.getForObject(url,String.class);
         //解析远程调用的请求响应
         RpcResult rpcResult = JSONObject.parseObject(result,RpcResult.class);
-        if(rpcResult==null){
+        /*if(rpcResult==null){
             //如果返回为空，重新设置下响应
             //使用构建器模式写入一个http的响应返回
             rpcResult = new RpcResult.Builder().success(false).message("failed").rpcResultType("").rpcResultValue("").build();
-        }
+        }*/
         return rpcResult;
-    }*/
+    }
 
     /**
      * post请求方式

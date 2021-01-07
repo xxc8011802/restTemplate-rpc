@@ -1,13 +1,11 @@
-package com.example.client.rpcproxy;
+package com.example.rpc.http;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.api.rpc.RpcParams;
 import com.example.api.rpc.RpcResult;
-import com.example.client.http.ClassUtil;
-import com.example.client.http.HttpClientService;
 import com.example.register.discover.ServiceDiscovery;
-import com.example.register.discover.ZooKeeperServiceDiscovery;
+import com.example.rpc.util.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 
 /**
  * rpc代理类，代理需要调用的方法，是的可以屏蔽底层的http调用，服务发现，序列化这些操作
