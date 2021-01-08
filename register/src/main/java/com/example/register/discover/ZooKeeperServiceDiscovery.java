@@ -2,6 +2,7 @@ package com.example.register.discover;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.example.register.constant.Constant;
+import com.example.register.discover.loadbalance.LoadBalance;
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.slf4j.Logger;
@@ -73,7 +74,7 @@ public class ZooKeeperServiceDiscovery implements ServiceDiscovery {
             if (CollectionUtil.isEmpty(addressList)) {
                 throw new RuntimeException(String.format("can not find any address node on path: %s", servicePath));
             }
-            // 获取 address 节点
+            // 获取 address 节点 可以做负载均衡处理
             String address;
             int size = addressList.size();
             if (size == 1) {
@@ -82,7 +83,8 @@ public class ZooKeeperServiceDiscovery implements ServiceDiscovery {
                 LOGGER.debug("get only address node: {}", address);
             } else {
                 // 若存在多个地址，则随机获取一个地址
-                address = addressList.get(ThreadLocalRandom.current().nextInt(size));
+                address = LoadBalance.routeLRU(name,addressList);
+                //address = addressList.get(ThreadLocalRandom.current().nextInt(size));
                 LOGGER.debug("get random address node: {}", address);
             }
             // 获取 address 节点的值
