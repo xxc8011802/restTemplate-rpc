@@ -1,4 +1,4 @@
-package com.example.rpc.http;
+package com.example.rpc.http.rest;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;

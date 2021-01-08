@@ -17,8 +17,8 @@ public class Server1Application
      * @return
      *//*
     @Bean
-    public RpcServer getApplicationContext() {
-        return new RpcServer();
+    public RestRpcServer getApplicationContext() {
+        return new RestRpcServer();
     }*/
 
 }

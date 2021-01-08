@@ -1,4 +1,4 @@
-package com.example.rpc.server;
+package com.example.rpc.http.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.example.api.rpc.RpcParams;
@@ -16,7 +16,7 @@ public class RpcHandler
     public static RpcResult getResult(RpcParams rpcParams){
         try{
             //接口和实现类的映射关系，根据接口名获得对应的实现类的实例
-            Map<String, Object> map = RpcServer.getMap();
+            Map<String, Object> map = RestRpcServer.getMap();
             Object ServiceBean = map.get(rpcParams.getClassName());
 
             //获取类(如果获取的是接口则要获取对应的实现方法类)??

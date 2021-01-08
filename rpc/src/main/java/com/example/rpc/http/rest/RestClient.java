@@ -1,4 +1,4 @@
-package com.example.rpc.http;
+package com.example.rpc.http.rest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.api.rpc.RpcParams;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
  * restTemplate 提供http调用的service
  */
 /*@Component*/
-public class HttpClientService
+public class RestClient
 {
     @Autowired
     private RestTemplate restTemplate;

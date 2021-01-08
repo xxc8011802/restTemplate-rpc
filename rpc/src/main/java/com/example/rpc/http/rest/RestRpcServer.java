@@ -1,8 +1,9 @@
-package com.example.rpc.server;
+package com.example.rpc.http.rest;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.example.register.register.ServiceRegistry;
+import com.example.rpc.annotation.RpcService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * 存放接口和实现类的映射关系
  */
-public class RpcServer implements ApplicationContextAware, InitializingBean
+public class RestRpcServer implements ApplicationContextAware, InitializingBean
 {
     private static ApplicationContext applicationContext;
     /**
@@ -25,17 +26,17 @@ public class RpcServer implements ApplicationContextAware, InitializingBean
 
     private ServiceRegistry serviceRegistry;
 
-    public RpcServer(){
+    public RestRpcServer(){
 
     }
 
     //构造函数注入 服务地址
-    public RpcServer(String serviceAddress){
+    public RestRpcServer(String serviceAddress){
         this.serviceAddress=serviceAddress;
     }
 
     //
-    public RpcServer(String serviceAddress, ServiceRegistry serviceRegistry)
+    public RestRpcServer(String serviceAddress, ServiceRegistry serviceRegistry)
     {
         this.serviceAddress = serviceAddress;
         this.serviceRegistry = serviceRegistry;

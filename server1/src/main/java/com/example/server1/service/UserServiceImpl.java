@@ -2,7 +2,7 @@ package com.example.server1.service;
 
 import com.example.api.bean.User;
 import com.example.api.bean.UserService;
-import com.example.rpc.server.RpcService;
+import com.example.rpc.annotation.RpcService;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

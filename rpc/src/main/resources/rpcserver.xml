@@ -3,23 +3,23 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="httpClientService" class="com.example.rpc.http.HttpClientService"></bean>
-    <bean id="restTemplateConfig" class="com.example.rpc.http.RestTemplateConfig"></bean>
-
+    <!--服务注册-->
     <bean id="serviceRegistry" class="com.example.register.register.ZooKeeperServiceRegistry">
         <constructor-arg name="zkAddress" value="localhost:2181"/>
     </bean>
-    <!--serviceAddress表示服务的端口和地址-->
-    <bean id="rpcServer" class="com.example.rpc.server.RpcServer">
+
+    <!--restTemplate 通信的服务端处理类-->
+    <bean id="restRpcServer" class="com.example.rpc.http.rest.RestRpcServer">
         <constructor-arg name="serviceAddress" value="localhost:9091"/>
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>
 
-    <bean id="serviceDiscovery" class="com.example.register.discover.ZooKeeperServiceDiscovery">
-        <constructor-arg name="zkAddress" value="localhost:2181"/>
+    <!--netty 通信的服务端处理类-->
+<!--
+    <bean id="rpcServer" class="com.example.rpc.http.netty.server.RpcServer">
+        <constructor-arg name="serviceAddress" value="localhost:9091"/>
+        <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>
+-->
 
-    <bean id="serviceProxy" class="com.example.rpc.http.ServiceProxy">
-        <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
-    </bean>
 </beans>

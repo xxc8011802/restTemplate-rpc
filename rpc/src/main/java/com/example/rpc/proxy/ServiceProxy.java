@@ -1,10 +1,12 @@
-package com.example.rpc.http;
+package com.example.rpc.proxy;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.api.rpc.RpcParams;
 import com.example.api.rpc.RpcResult;
 import com.example.register.discover.ServiceDiscovery;
+import com.example.rpc.http.netty.NettyClient;
+import com.example.rpc.http.rest.RestClient;
 import com.example.rpc.util.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,10 @@ public class ServiceProxy
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceProxy.class);
 
     @Autowired
-    HttpClientService httpClientService;
+    RestClient restClient;
+
+ /*   @Autowired
+    NettyClient nettyClient;*/
 
     private String serviceAddress;
 
@@ -79,7 +84,7 @@ public class ServiceProxy
                 rpcParams.setValues(JSONObject.toJSONString(args));
                 // 获得服务的主机名和端口号，之后可通过服务发现的方式来获取服务的ip和端口号
                 String host = "localhost";
-                String port = "9091";
+                int port = 9091;
                 String url="http://localhost:9091/";
                 //服务发现
                 if (serviceDiscovery != null) {
@@ -94,9 +99,11 @@ public class ServiceProxy
                 if (StrUtil.isEmpty(serviceAddress)) {
                     throw new RuntimeException("server address is empty");
                 }
-
-                // 创建 RPC 客户端对象并发送 RPC 请求
-                RpcResult rpcResult = httpClientService.send(url,rpcParams);
+                // 创建 RPC 客户端对象并发送 RPC 请求 netty host和port是服务提供方端口
+                /*NettyClient nettyClient = new NettyClient(host, port);
+                RpcResult rpcResult = nettyClient.send(rpcParams);*/
+                // 创建 RPC 客户端对象并发送 RPC 请求 restTemplate
+                RpcResult rpcResult = restClient.send(url,rpcParams);
                 //响应的rpc的ResultValue是json类型的,需要转换为需要的类型
                 Object value = JSONObject.parseObject(rpcResult.getRpcResultValue(),ClassUtil.getArgTypeClass(rpcResult.getRpcResultType()));
                 return value;

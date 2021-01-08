@@ -2,11 +2,10 @@ package com.example.server2.service;
 
 import com.example.api.bean.User;
 import com.example.api.bean.UserService;
-import com.example.rpc.server.RpcService;
+import com.example.rpc.annotation.RpcService;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-/*@Service*/
 @RpcService(UserService.class)
 public class UserServiceImpl implements UserService
 {

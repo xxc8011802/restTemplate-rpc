@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--restTemplate 作为通信方式的配置项-->
+    <bean id="httpClientService" class="com.example.rpc.http.rest.RestClient"></bean>
+    <bean id="restTemplateConfig" class="com.example.rpc.http.rest.RestTemplateConfig"></bean>
+
+    <!--服务发现-->
+    <bean id="serviceDiscovery" class="com.example.register.discover.ZooKeeperServiceDiscovery">
+        <constructor-arg name="zkAddress" value="localhost:2181"/>
+    </bean>
+    <!--代理-->
+    <bean id="serviceProxy" class="com.example.rpc.proxy.ServiceProxy">
+        <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
+    </bean>
+
+</beans>

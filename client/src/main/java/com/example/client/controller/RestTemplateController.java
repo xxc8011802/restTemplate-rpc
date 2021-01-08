@@ -3,7 +3,7 @@ package com.example.client.controller;
 import com.example.api.bean.CompanyService;
 import com.example.api.bean.User;
 import com.example.api.bean.UserService;
-import com.example.rpc.http.ServiceProxy;
+import com.example.rpc.proxy.ServiceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

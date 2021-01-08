@@ -1,7 +1,7 @@
 package com.example.server1.service;
 
 import com.example.api.bean.CompanyService;
-import com.example.rpc.server.RpcService;
+import com.example.rpc.annotation.RpcService;
 
 @RpcService(CompanyService.class)
 public class CompanyServiceImpl implements CompanyService

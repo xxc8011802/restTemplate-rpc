@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <import resource="classpath*:rpcbean.xml"></import>
+    <import resource="classpath*:rpcclient.xml"></import>
 
     <bean id="user" class="com.example.client.entity.User"></bean>
     <bean id="userService" class="com.example.client.service.UserServiceImpl"></bean>

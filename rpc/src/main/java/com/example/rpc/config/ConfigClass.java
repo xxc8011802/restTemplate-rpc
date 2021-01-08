@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ImportResource;
  * @ImportResource 引入对应的xml文件
  */
 @Configuration
-@ImportResource(locations = {"classpath:rpcbean.xml"})
+@ImportResource(locations = {"classpath:rpcserver.xml"})
 public class ConfigClass
 {
 }
