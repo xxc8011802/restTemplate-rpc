@@ -1,11 +1,10 @@
 package com.example.register.discover.loadbalance;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static java.util.Objects.hash;
 
 /**
  * 负载均衡,ZK选择节点服务
@@ -58,6 +57,7 @@ public class LoadBalance
         if (lruItem == null) {
             /**
              * LinkedHashMap
+             * hashMap是无序的，linkedHashMap是有序的(通过table和双向列表实现)
              *      a、accessOrder：ture=访问顺序排序（get/put时排序）/ACCESS-LAST；false=插入顺序排期/FIFO；
              *      b、removeEldestEntry：新增元素时将会调用，返回true时会删除最老元素；可封装LinkedHashMap并重写该方法，比如定义最大容量，超出是返回true即可实现固定长度的LRU算法；
              *      map的key 是address value也是address
@@ -81,13 +81,41 @@ public class LoadBalance
                 lruItem.put(address, address);
             }
         }
-
         // load
         String eldestKey = lruItem.entrySet().iterator().next().getKey();//获取列表中首个key名
         String eldestValue = lruItem.get(eldestKey);//LRU算法关键体现在这里，实现了固定长度的LRU算法，每次去取的值的时候会重新对lruItem进行顺序变化
         return eldestValue;
     }
 
+    /**
+     * 一致性hash
+     */
+    public static  String routeConsistentHash(String serviceKey,List<String> addressList){
+
+        //hash节点个数
+        Integer VIRTUAL_NODE_NUM = 5;
+        //存放服务虚拟节点的hash值和对应的地址 addressRing即为hash环
+        TreeMap<Long, String> addressRing = new TreeMap<Long, String>();
+        for (String address: addressList) {
+            for (int i = 0; i < VIRTUAL_NODE_NUM; i++) {
+                long addressHash = hash("SHARD-" + address + "-NODE-" + i);
+                addressRing.put(addressHash, address);
+            }
+        }
+        long jobHash = hash(serviceKey);
+
+        //将addressHash值大于jobHash值的adress都取出来
+        SortedMap<Long, String> lastRing = addressRing.tailMap(jobHash);
+
+//        System.out.println(lastRing);
+        if (!lastRing.isEmpty()) {
+            //如果这个地址不为空，就返回这个的第一个
+            return lastRing.get(lastRing.firstKey());
+        }
+        System.out.println(lastRing.firstKey());
+        //返回没有减少的地址的第一个
+        return addressRing.firstEntry().getValue();
+    }
 
     /**
      * 记录每个地址

@@ -83,7 +83,7 @@ public class ZooKeeperServiceDiscovery implements ServiceDiscovery {
                 LOGGER.debug("get only address node: {}", address);
             } else {
                 // 若存在多个地址，则随机获取一个地址
-                address = LoadBalance.routeLRU(name,addressList);
+                address = LoadBalance.routeConsistentHash(name,addressList);
                 //address = addressList.get(ThreadLocalRandom.current().nextInt(size));
                 LOGGER.debug("get random address node: {}", address);
             }
