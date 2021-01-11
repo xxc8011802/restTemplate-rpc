@@ -19,6 +19,11 @@ public class RpcResult implements Serializable
      */
     private String message;
 
+    /**
+     * 调用链
+     */
+    private String requestId;
+
 
     private String rpcResultType;
 
@@ -29,10 +34,12 @@ public class RpcResult implements Serializable
 
     }
 
-    public RpcResult(boolean success, String message, String rpcResultType, String rpcResultValue)
+    public RpcResult(boolean success, String message, String requestId, String rpcResultType,
+        String rpcResultValue)
     {
         this.success = success;
         this.message = message;
+        this.requestId = requestId;
         this.rpcResultType = rpcResultType;
         this.rpcResultValue = rpcResultValue;
     }
@@ -45,12 +52,12 @@ public class RpcResult implements Serializable
         this.rpcResultValue = rpcResultValue;
     }*/
 
-    public static RpcResult getFailResult(String reason) {
-        return new RpcResult(false, "失败", null, null);
+    public static RpcResult getFailResult(String reason,String requestId) {
+        return new RpcResult(false, "失败",requestId, null, null);
     }
 
-    public static RpcResult getSuccessResult(String resultType, String resultValue) {
-        return new RpcResult(true, "成功了", resultType, resultValue);
+    public static RpcResult getSuccessResult(String requestId,String resultType, String resultValue) {
+        return new RpcResult(true, "成功了",requestId, resultType, resultValue);
     }
 
     public boolean isSuccess()
@@ -71,6 +78,16 @@ public class RpcResult implements Serializable
     public void setMessage(String message)
     {
         this.message = message;
+    }
+
+    public String getRequestId()
+    {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId)
+    {
+        this.requestId = requestId;
     }
 
     public String getRpcResultType()
@@ -129,6 +146,7 @@ public class RpcResult implements Serializable
         final StringBuffer sb = new StringBuffer("RpcResult{");
         sb.append("success=").append(success);
         sb.append(", message='").append(message).append('\'');
+        sb.append(", requestId='").append(requestId).append('\'');
         sb.append(", rpcResultType='").append(rpcResultType).append('\'');
         sb.append(", rpcResultValue='").append(rpcResultValue).append('\'');
         sb.append('}');

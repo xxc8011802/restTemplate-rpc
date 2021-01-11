@@ -38,7 +38,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcParams> {
             rpcResult = handle(rpcParams);
         } catch (Exception e) {
             LOGGER.error("handle result failure", e);
-            rpcResult = RpcResult.getFailResult("failed");
+            rpcResult = RpcResult.getFailResult("failed",rpcParams.getRequestId());
         }
         // 写入 RPC 响应对象并自动关闭连接
         ctx.writeAndFlush(rpcResult).addListener(ChannelFutureListener.CLOSE);
@@ -66,7 +66,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcParams> {
         method.setAccessible(true);
         //只获得了rpcresult中value的值
         Object rpcResultValue = method.invoke(serviceBean, args);
-        RpcResult rpcResult = RpcResult.getSuccessResult(method.getReturnType().getName(), JSON.toJSONString(rpcResultValue));
+        RpcResult rpcResult = RpcResult.getSuccessResult(rpcParams.getRequestId(),method.getReturnType().getName(), JSON.toJSONString(rpcResultValue));
         return rpcResult;
         // 使用 CGLib 执行反射调用 ，cglib可以代理非接口
         /*FastClass serviceFastClass = FastClass.create(serviceClass);

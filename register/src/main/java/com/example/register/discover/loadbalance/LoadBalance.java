@@ -90,6 +90,7 @@ public class LoadBalance
     /**
      * 一致性hash
      * 主要是避免当server中途宕机的时候，查找发生错乱
+     * 负载均衡需要传入一个和客户端相关的唯一Id，例如UUID,否则根据serviceKey只会路由到相同的节点
      */
     public static  String routeConsistentHash(String serviceKey,List<String> addressList){
 

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.UUID;
 
 /**
  * rpc代理类，代理需要调用的方法，是的可以屏蔽底层的http调用，服务发现，序列化这些操作
@@ -79,6 +80,10 @@ public class ServiceProxy
                 }
                 rpcParams.setClassName(method.getDeclaringClass().getName());
                 rpcParams.setMethodName(method.getName());
+                //可以作为调用链查看
+                String requestId = UUID.randomUUID().toString();
+                //System.out.println("[[----Client generate RequestId"+ requestId + "----]]");
+                rpcParams.setRequestId(requestId);
                 //参数类型和参数值都转换为String传递
                 rpcParams.setType(JSONObject.toJSONString(method.getParameterTypes()));
                 rpcParams.setValues(JSONObject.toJSONString(args));
@@ -92,7 +97,7 @@ public class ServiceProxy
                     if (StrUtil.isNotEmpty(serviceVersion)) {
                         serviceName += "-" + serviceVersion;
                     }
-                    serviceAddress = serviceDiscovery.discover(serviceName);
+                    serviceAddress = serviceDiscovery.discover(serviceName,"");
                     url = "http://"+serviceAddress;
                     LOGGER.debug("discover service: {} => {}", serviceName, serviceAddress);
                 }

@@ -66,7 +66,7 @@ public class RestClient
     public RpcResult send(String url ,RpcParams rpcParams) throws Throwable{
         HttpEntity<RpcParams> request = new HttpEntity<>(rpcParams);
         ResponseEntity<RpcResult> responseEntity = restTemplate.postForEntity(url,request,RpcResult.class);
-        System.out.println("client get :" + responseEntity.getBody());
+        System.out.println("[[client get :" + responseEntity.getBody()+"]]");
         return responseEntity.getBody();
     }
 }

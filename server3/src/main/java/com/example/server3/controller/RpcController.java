@@ -25,7 +25,7 @@ public class RpcController
     public RpcResult rpcMain (@RequestBody RpcParams rpcParams){
         RpcResult rpcResult = getResult(rpcParams);
         //RpcResult rpcResult = new RpcResult(true,"ok","user","name:1");
-        System.out.println("Server return:" + rpcResult.toString());
+        //System.out.println("Server return:" + rpcResult.toString());
         return rpcResult;
     }
 

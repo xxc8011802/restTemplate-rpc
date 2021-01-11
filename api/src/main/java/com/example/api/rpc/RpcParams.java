@@ -94,4 +94,17 @@ public class RpcParams implements Serializable
     {
         this.values = values;
     }
+
+    @Override
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer("RpcParams{");
+        sb.append("className='").append(className).append('\'');
+        sb.append(", methodName='").append(methodName).append('\'');
+        sb.append(", requestId='").append(requestId).append('\'');
+        sb.append(", type='").append(type).append('\'');
+        sb.append(", values='").append(values).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

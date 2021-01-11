@@ -60,13 +60,13 @@ public class ZooKeeperServiceDiscovery implements ServiceDiscovery {
     }
 
     @Override
-    public String discover(String name) {
+    public String discover(String serviceName,String consistentHashKey) {
         // 创建 ZooKeeper 客户端
         //ZkClient zkClient = new ZkClient(zkAddress, Constant.ZK_SESSION_TIMEOUT, Constant.ZK_CONNECTION_TIMEOUT);
         LOGGER.debug("connect zookeeper");
         try {
             // 获取 service 节点
-            String servicePath = ZK_REGISTRY_PATH + "/" + name;
+            String servicePath = ZK_REGISTRY_PATH + "/" + serviceName;
             if (!zkClient.exists(servicePath)) {
                 throw new RuntimeException(String.format("can not find any service node on path: %s", servicePath));
             }
@@ -83,7 +83,7 @@ public class ZooKeeperServiceDiscovery implements ServiceDiscovery {
                 LOGGER.debug("get only address node: {}", address);
             } else {
                 // 若存在多个地址，则随机获取一个地址
-                address = LoadBalance.routeConsistentHash(name,addressList);
+                address = LoadBalance.routeConsistentHash(serviceName,addressList);
                 //address = addressList.get(ThreadLocalRandom.current().nextInt(size));
                 LOGGER.debug("get random address node: {}", address);
             }
@@ -94,4 +94,10 @@ public class ZooKeeperServiceDiscovery implements ServiceDiscovery {
             //zkClient.close();
         }
     }
+
+    @Override
+    public String discover(String serviceName){
+        return discover(serviceName,"");
+    }
+
 }

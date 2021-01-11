@@ -32,11 +32,13 @@ public class RpcHandler
              * 反射:根据实例和参数进行请求
              */
             Object rpcResultValue = method.invoke(ServiceBean, args);
-            RpcResult rpcResult = RpcResult.getSuccessResult(method.getReturnType().getName(), JSON.toJSONString(rpcResultValue));
-            System.out.println("getResult method:  "+ rpcResult.toString());
+            RpcResult rpcResult = RpcResult.getSuccessResult(rpcParams.getRequestId(),method.getReturnType().getName(), JSON.toJSONString(rpcResultValue));
+            System.out.println("[[----getResult method:  "+ rpcResult.toString()+"----]]");
             return rpcResult;
         }catch (Exception e){
-            return RpcResult.getFailResult("failed");
+            RpcResult rpcResult = RpcResult.getFailResult(rpcParams.getRequestId(),"failed");
+            System.out.println("[[----getResult method:  "+ rpcResult.toString()+"----]]");
+            return rpcResult;
         }
     }
 

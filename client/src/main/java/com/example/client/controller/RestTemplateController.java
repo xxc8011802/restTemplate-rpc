@@ -1,5 +1,6 @@
 package com.example.client.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.api.bean.CompanyService;
 import com.example.api.bean.User;
 import com.example.api.bean.UserService;
@@ -7,6 +8,10 @@ import com.example.rpc.proxy.ServiceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,14 +31,14 @@ public class RestTemplateController
     @Autowired
     private RestTemplate restTemplate;
 
-    /*@RequestMapping("/testRestTemplate")
+    @RequestMapping("/testRestTemplate")
     @ResponseBody
     public Object testRestTemplate() throws IOException
     {
-        *//*ResponseEntity result= restTemplate.getForEntity("http://localhost:9091/getUserName",ResponseEntity.class);*//*
-        String result = restTemplate.getForObject("http://localhost:9091/getUserName",String.class);
+        ResponseEntity result= restTemplate.getForEntity("http://localhost:9091/getUserName",ResponseEntity.class);
+        //String result = restTemplate.getForObject("http://localhost:9091/getUserName",String.class);
         return result;
-    }*/
+    }
 
 /*    *//**
      * 测试restTemplate发送post请求
@@ -41,7 +46,7 @@ public class RestTemplateController
      * 使用json 格式传输
      * @return
      * @throws IOException
-     *//*
+     */
     @RequestMapping("/testRestTemplatePost")
     @ResponseBody
     public Object testRestTemplatePost() throws IOException
@@ -56,23 +61,24 @@ public class RestTemplateController
         HttpEntity<String> request = new HttpEntity<>(userjson, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://localhost:9091/getUserInfo",request,String.class);
         return responseEntity.getBody();
-    }*/
+    }
 
     /**
      * 测试restTemplate发送post请求
      * @return
      * @throws IOException
      */
-/*    @RequestMapping("/testRestTemplatePostPOJO")
+    @RequestMapping("/testRestTemplatePostPOJO")
     @ResponseBody
     public Object testRestTemplatePostPOJO() throws IOException
     {
         User user = new User("fdm",10);
         HttpEntity<User> request = new HttpEntity<>(user);
-        ResponseEntity<User> responseEntity = restTemplate.postForEntity("http://localhost:9091/getUserInfoPOJO",request,User.class);
+        ResponseEntity<User>
+            responseEntity = restTemplate.postForEntity("http://localhost:9091/getUserInfoPOJO",request,User.class);
         System.out.println(responseEntity.getBody());
         return responseEntity.getBody();
-    }*/
+    }
 
     /**
      * 测试rpc
