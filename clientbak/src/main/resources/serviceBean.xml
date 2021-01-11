@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="classpath*:rpcclient.xml"></import>
+
+    <bean id="user" class="com.example.clientbak.entity.User"></bean>
+    <bean id="userService" class="com.example.clientbak.service.UserServiceImpl"></bean>
+
+
+<!--    <bean id="serviceDiscovery" class="com.example.register.discover.ZooKeeperServiceDiscovery">
+        <constructor-arg name="zkAddress" value="localhost:2181"/>
+    </bean>
+
+    <bean id="serviceProxy" class="com.example.client.rpcproxy.ServiceProxy">
+        <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
+    </bean>-->
+
+</beans>

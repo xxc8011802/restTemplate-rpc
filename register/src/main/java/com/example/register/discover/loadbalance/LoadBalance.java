@@ -89,6 +89,7 @@ public class LoadBalance
 
     /**
      * 一致性hash
+     * 主要是避免当server中途宕机的时候，查找发生错乱
      */
     public static  String routeConsistentHash(String serviceKey,List<String> addressList){
 

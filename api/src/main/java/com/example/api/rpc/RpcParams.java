@@ -18,6 +18,11 @@ public class RpcParams implements Serializable
     private String methodName;
 
     /*
+     * 请求Id requestId
+     */
+    private String requestId;
+
+    /*
      * 请求类型
      */
     private String type;
@@ -31,12 +36,13 @@ public class RpcParams implements Serializable
 
     }
 
-
-    public RpcParams(String className,String methodName,String type, String values){
-        this.className=className;
-        this.methodName=methodName;
-        this.type=type;
-        this.values=values;
+    public RpcParams(String className, String methodName, String requestId, String type, String values)
+    {
+        this.className = className;
+        this.methodName = methodName;
+        this.requestId = requestId;
+        this.type = type;
+        this.values = values;
     }
 
     public String getClassName()
@@ -57,6 +63,16 @@ public class RpcParams implements Serializable
     public void setMethodName(String methodName)
     {
         this.methodName = methodName;
+    }
+
+    public String getRequestId()
+    {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId)
+    {
+        this.requestId = requestId;
     }
 
     public String getType()
