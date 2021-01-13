@@ -56,6 +56,7 @@ public class ServiceProxyRsi
 
     }
 
+    //resilience4j 熔断配置  应该初始化的时候把需要进行熔断的method加入进行熔断
     static {
         //客户端初始化的时候应该把需要熔断检测的配置先配置好
         circuitBreakerConfig = CircuitBreakerConfig
@@ -65,8 +66,8 @@ public class ServiceProxyRsi
             .waitDurationInOpenState(Duration.ofSeconds(30))//熔断器从打开状态到半开状态的等待时间
             .enableAutomaticTransitionFromOpenToHalfOpen()//如果置为true，当等待时间结束会自动由打开变为半开，若置为false，则需要一个请求进入来触发熔断器状态转换
             .build();
-            circuitBreaker = CircuitBreaker.of("getUserInfo",circuitBreakerConfig);
-            retry = Retry.ofDefaults("getUserInfo");
+            circuitBreaker = CircuitBreaker.of("getUserInfo1",circuitBreakerConfig);
+            retry = Retry.ofDefaults("getUserInfo1");
     }
 
     public ServiceProxyRsi(String serviceAddress) {
@@ -144,24 +145,24 @@ public class ServiceProxyRsi
                         {
                             rpcResult= restClient.send(url,rpcParams);
                         }catch (RestClientException exception){
-                            //System.out.println("restClient exception");
                         }
+                        //如果请求响应为失败则抛出异常,业务异常应该会反应对应的错误码和错误信息
                         if(!rpcResult.isSuccess()&&rpcResult.getMessage()==null){
-                            //如果请求响应为失败则抛出异常
                             throw new RestClientException("Http Post Failed, RestClient Exception ");
                         }
                         return rpcResult;
                     }
                 };
+
                 //捕获异常后异常后处理逻辑
                 Function<? super Throwable, ? extends RpcResult> errorHandler = throwable -> {
                     //重试返回
-                    //系统异常码处理
-                    //熔断
+                    //当故障率高于设定的阈值时，熔断器状态会从由CLOSE变为OPEN。这时所有的请求都会抛出CallNotPermittedException异常
                     if(throwable instanceof CallNotPermittedException){
                         System.out.println("[[----throwable 熔断捕获:"+throwable+"----]]");
                         return getFailResult("运行时异常",requestId);
                     }else if(throwable instanceof RestClientException){
+                        //请求通信返回的异常码处理
                         System.out.println("[[----throwable 请求超时:"+throwable+"----]]");
                         return getFailResult("请求超时",requestId);
                     }else{
@@ -170,14 +171,13 @@ public class ServiceProxyRsi
                         return getFailResult("其他错误",requestId);
                     }
                 };
-                //resilience4j 熔断配置  应该初始化的时候把需要进行熔断的method加入进行熔断
+
                 //熔断第一层装饰器
                 Supplier<RpcResult> supplier1 = CircuitBreaker.decorateSupplier(circuitBreaker, supplier);
                 //重试第二层装饰器
                 //Supplier<RpcResult>  supplier2 = Retry.decorateSupplier(retry, supplier1);
                 //恢复第三层装饰器
                 Try<RpcResult> supplier3 =Try.ofSupplier(supplier1).recover(errorHandler);
-
                 //执行
                 RpcResult result = supplier3.get();
 

@@ -96,12 +96,25 @@ public class RestTemplateController
     public Object testRestTemplateRpc() throws IOException
     {
         //ApplicationContext context = new ClassPathXmlApplicationContext("serviceBean.xml");
-        ServiceProxy serviceProxy = context.getBean(ServiceProxy.class);
-        UserService userService = serviceProxy.create(UserService.class);
-        User user = userService.getUserInfo(new User("xxc",2));
-        CompanyService companyService = serviceProxy.create(CompanyService.class);
+        ServiceProxyRsi serviceProxyRsi = context.getBean(ServiceProxyRsi.class);
+        /*UserService userService = serviceProxyRsi.create(UserService.class);
+        String name = userService.getName("bob");*/
+       /* if(name == null){
+            return "未获取到用户名称";
+        }else{
+
+        }*/
+        CompanyService companyService = serviceProxyRsi.create(CompanyService.class);
         String companyName = companyService.getCompanyName("mi");
-        return companyName+user.toString();
+        if(companyName == null){
+            return "未获取到用户名称";
+        }else{
+
+        }
+        /*User user = userService.getUserInfo(new User("xxc",2));
+        CompanyService companyService = serviceProxy.create(CompanyService.class);
+        String companyName = companyService.getCompanyName("mi");*/
+        return companyName;
     }
 
     /**
