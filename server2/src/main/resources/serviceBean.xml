@@ -5,10 +5,16 @@
 
     <import resource="classpath*:rpcserver.xml"></import>
 
-    <!--服务优雅下线关闭配置-->
-    <bean id="shutdown" class="com.example.server2.config.ShutDown">
-        <constructor-arg name="serviceAddress" value="localhost:9092"/>
+    <!--restTemplate 通信的服务端处理类-->
+    <bean id="restRpcServer" class="com.example.rpc.http.rest.RestRpcServer">
+        <constructor-arg name="serviceAddress" value="localhost:9094"/>
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>
+
+    <!--服务优雅下线关闭配置-->
+<!--    <bean id="shutdown" class="com.example.server2.config.ShutDown">
+        <constructor-arg name="serviceAddress" value="localhost:9092"/>
+        <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
+    </bean>-->
 
 </beans>

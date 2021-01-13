@@ -16,4 +16,9 @@
         <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
     </bean>
 
+    <!--代理-->
+    <bean id="serviceProxyRsi" class="com.example.rpc.proxy.ServiceProxyRsi">
+        <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
+    </bean>
+
 </beans>

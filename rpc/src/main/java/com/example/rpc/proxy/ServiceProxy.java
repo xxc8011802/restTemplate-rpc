@@ -75,9 +75,6 @@ public class ServiceProxy
              */
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable{
                 RpcParams rpcParams = new RpcParams();
-                if(method.getName().equals("getUserInfo")){
-                    System.out.println("method is getUserInfo");
-                }
                 rpcParams.setClassName(method.getDeclaringClass().getName());
                 rpcParams.setMethodName(method.getName());
                 //可以作为调用链查看
@@ -109,7 +106,6 @@ public class ServiceProxy
                 RpcResult rpcResult = nettyClient.send(rpcParams);*/
                 // 创建 RPC 客户端对象并发送 RPC 请求 restTemplate
                 RpcResult rpcResult = restClient.send(url,rpcParams);
-                //响应的rpc的ResultValue是json类型的,需要转换为需要的类型
                 Object value = JSONObject.parseObject(rpcResult.getRpcResultValue(),ClassUtil.getArgTypeClass(rpcResult.getRpcResultType()));
                 return value;
             }

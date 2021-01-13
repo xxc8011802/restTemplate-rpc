@@ -20,6 +20,11 @@ public class UserServiceImpl implements UserService
     }
 
     public User getUserInfo(User user){
+        try{
+            Thread.sleep(5000);
+        }catch(Exception e){
+
+        }
         User user2 = new User(user.getUserName(),user.getAge()+30);
         return user2;
     }

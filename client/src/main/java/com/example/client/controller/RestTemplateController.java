@@ -5,6 +5,9 @@ import com.example.api.bean.CompanyService;
 import com.example.api.bean.User;
 import com.example.api.bean.UserService;
 import com.example.rpc.proxy.ServiceProxy;
+import com.example.rpc.proxy.ServiceProxyRsi;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -30,6 +33,7 @@ public class RestTemplateController
      */
     @Autowired
     private RestTemplate restTemplate;
+
 
     @RequestMapping("/testRestTemplate")
     @ResponseBody
@@ -98,6 +102,32 @@ public class RestTemplateController
         CompanyService companyService = serviceProxy.create(CompanyService.class);
         String companyName = companyService.getCompanyName("mi");
         return companyName+user.toString();
+    }
+
+    /**
+     * 测试rpc
+     * 传输方式可以采用LinkedMultiValueMap  JSONObject 实体类传送参数
+     * 使用json 格式传输
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/testRestTemplateRpcRsi")
+    @ResponseBody
+    public Object testRestTemplateRpcRsi() throws IOException
+    {
+        //ApplicationContext context = new ClassPathXmlApplicationContext("serviceBean.xml");
+        ServiceProxyRsi serviceProxyRsi = context.getBean(ServiceProxyRsi.class);
+        UserService userService = serviceProxyRsi.create(UserService.class);
+        User user = new User();
+        try{
+            user = userService.getUserInfo(new User("xxc",2));
+            if(user == null){
+                return new User("失败给个假用户",111);
+            }
+        }catch (Exception e){
+
+        }
+        return user.toString();
     }
 
 

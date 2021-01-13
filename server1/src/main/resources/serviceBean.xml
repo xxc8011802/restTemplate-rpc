@@ -3,4 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <import resource="classpath*:rpcserver.xml"></import>
+
+    <!--restTemplate 通信的服务端处理类-->
+    <bean id="restRpcServer" class="com.example.rpc.http.rest.RestRpcServer">
+        <constructor-arg name="serviceAddress" value="localhost:9091"/>
+        <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
+    </bean>
 </beans>

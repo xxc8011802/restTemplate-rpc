@@ -8,12 +8,6 @@
         <constructor-arg name="zkAddress" value="localhost:2181"/>
     </bean>
 
-    <!--restTemplate 通信的服务端处理类-->
-    <bean id="restRpcServer" class="com.example.rpc.http.rest.RestRpcServer">
-        <constructor-arg name="serviceAddress" value="localhost:9091"/>
-        <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
-    </bean>
-
     <!--netty 通信的服务端处理类-->
 <!--
     <bean id="rpcServer" class="com.example.rpc.http.netty.server.RpcServer">

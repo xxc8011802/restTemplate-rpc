@@ -44,14 +44,6 @@ public class RpcResult implements Serializable
         this.rpcResultValue = rpcResultValue;
     }
 
-/*    public RpcResult(Builder builder)
-    {
-        this.success = success;
-        this.message = message;
-        this.rpcResultType = rpcResultType;
-        this.rpcResultValue = rpcResultValue;
-    }*/
-
     public static RpcResult getFailResult(String reason,String requestId) {
         return new RpcResult(false, "失败",requestId, null, null);
     }

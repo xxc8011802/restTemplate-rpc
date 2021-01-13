@@ -8,6 +8,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -63,10 +65,17 @@ public class RestClient
      * @return
      * @throws Throwable
      */
-    public RpcResult send(String url ,RpcParams rpcParams) throws Throwable{
+    public RpcResult send(String url ,RpcParams rpcParams) throws RestClientException
+    {
         HttpEntity<RpcParams> request = new HttpEntity<>(rpcParams);
+        // 五秒超时则直接返回
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(3000);
+        requestFactory.setReadTimeout(3000);
+        restTemplate.setRequestFactory(requestFactory);
+        //
         ResponseEntity<RpcResult> responseEntity = restTemplate.postForEntity(url,request,RpcResult.class);
-        System.out.println("[[client get :" + responseEntity.getBody()+"]]");
+        //System.out.println("[[client get :" + responseEntity.getBody()+"]]");
         return responseEntity.getBody();
     }
 }
