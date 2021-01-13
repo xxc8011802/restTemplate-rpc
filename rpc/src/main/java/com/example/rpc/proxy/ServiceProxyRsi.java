@@ -45,6 +45,9 @@ public class ServiceProxyRsi
  /*   @Autowired
     NettyClient nettyClient;*/
 
+    @Autowired
+    Circuit circuit;
+
     private String serviceAddress;
 
     private ServiceDiscovery serviceDiscovery;
@@ -159,7 +162,7 @@ public class ServiceProxyRsi
                     }
                 };
 
-                //resilience4j 熔断配置  应该初始化的时候把需要进行熔断的method加入进行熔断
+                //resilience4j 熔断配置
                 //根据接口获取不同方法名的熔断器，例如UserService的getUserInfo和getUserName就使用不同名的熔断配置,做到接口间隔离，互不影响
                 if(circuitBreakerMap.get(method.getName())!=null){
                     circuitConfig = circuitBreakerMap.get(method.getName());
@@ -167,17 +170,8 @@ public class ServiceProxyRsi
                     circuitConfig = new CircuitConfig(method.getName());
                     circuitBreakerMap.put(method.getName(),circuitConfig);
                 }
-
-                //熔断第一层装饰器
-                Supplier<RpcResult> supplier1 = CircuitBreaker.decorateSupplier(circuitConfig.getCircuitBreaker(), supplier);
-                //重试第二层装饰器
-                Supplier<RpcResult> supplier2 = Retry.decorateSupplier(circuitConfig.getRetry(), supplier1);
-                //恢复第三层装饰器
-                Try<RpcResult> supplier3 =Try.ofSupplier(supplier2).recover(errorHandler);
-                //执行
-                RpcResult result = supplier3.get();
-
-
+                //熔断处理
+                RpcResult result = circuit.execute(supplier,errorHandler,circuitConfig);
 
                 try{
                     if(result.isSuccess()){

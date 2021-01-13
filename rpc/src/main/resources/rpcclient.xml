@@ -21,4 +21,6 @@
         <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
     </bean>
 
+    <!--熔断处理-->
+    <bean id="circuit" class="com.example.rpc.circuit.CircuitImpl"/>
 </beans>
