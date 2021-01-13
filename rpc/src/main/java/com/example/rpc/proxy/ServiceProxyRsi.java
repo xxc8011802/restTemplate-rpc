@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.api.rpc.RpcParams;
 import com.example.api.rpc.RpcResult;
 import com.example.register.discover.ServiceDiscovery;
+import com.example.rpc.circuit.Circuit;
+import com.example.rpc.circuit.CircuitConfig;
 import com.example.rpc.http.rest.RestClient;
 import com.example.rpc.util.ClassUtil;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
@@ -22,6 +24,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -46,28 +49,12 @@ public class ServiceProxyRsi
 
     private ServiceDiscovery serviceDiscovery;
 
-    private static CircuitBreaker circuitBreaker;
+    private CircuitConfig circuitConfig;
 
-    private static Retry retry;
-
-    private static CircuitBreakerConfig circuitBreakerConfig;
+    private static HashMap<String,CircuitConfig> circuitBreakerMap = new HashMap<>();
 
     public ServiceProxyRsi(){
 
-    }
-
-    //resilience4j 熔断配置  应该初始化的时候把需要进行熔断的method加入进行熔断
-    static {
-        //客户端初始化的时候应该把需要熔断检测的配置先配置好
-        circuitBreakerConfig = CircuitBreakerConfig
-            .custom()
-            .minimumNumberOfCalls(5)
-            .failureRateThreshold(10)//触发熔断的失败率阈值
-            .waitDurationInOpenState(Duration.ofSeconds(30))//熔断器从打开状态到半开状态的等待时间
-            .enableAutomaticTransitionFromOpenToHalfOpen()//如果置为true，当等待时间结束会自动由打开变为半开，若置为false，则需要一个请求进入来触发熔断器状态转换
-            .build();
-            circuitBreaker = CircuitBreaker.of("getUserInfo1",circuitBreakerConfig);
-            retry = Retry.ofDefaults("getUserInfo1");
     }
 
     public ServiceProxyRsi(String serviceAddress) {
@@ -172,14 +159,25 @@ public class ServiceProxyRsi
                     }
                 };
 
+                //resilience4j 熔断配置  应该初始化的时候把需要进行熔断的method加入进行熔断
+                //根据接口获取不同方法名的熔断器，例如UserService的getUserInfo和getUserName就使用不同名的熔断配置,做到接口间隔离，互不影响
+                if(circuitBreakerMap.get(method.getName())!=null){
+                    circuitConfig = circuitBreakerMap.get(method.getName());
+                }else{
+                    circuitConfig = new CircuitConfig(method.getName());
+                    circuitBreakerMap.put(method.getName(),circuitConfig);
+                }
+
                 //熔断第一层装饰器
-                Supplier<RpcResult> supplier1 = CircuitBreaker.decorateSupplier(circuitBreaker, supplier);
+                Supplier<RpcResult> supplier1 = CircuitBreaker.decorateSupplier(circuitConfig.getCircuitBreaker(), supplier);
                 //重试第二层装饰器
-                //Supplier<RpcResult>  supplier2 = Retry.decorateSupplier(retry, supplier1);
+                Supplier<RpcResult> supplier2 = Retry.decorateSupplier(circuitConfig.getRetry(), supplier1);
                 //恢复第三层装饰器
-                Try<RpcResult> supplier3 =Try.ofSupplier(supplier1).recover(errorHandler);
+                Try<RpcResult> supplier3 =Try.ofSupplier(supplier2).recover(errorHandler);
                 //执行
                 RpcResult result = supplier3.get();
+
+
 
                 try{
                     if(result.isSuccess()){

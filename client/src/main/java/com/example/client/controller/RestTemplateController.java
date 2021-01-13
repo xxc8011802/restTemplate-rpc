@@ -107,7 +107,7 @@ public class RestTemplateController
         CompanyService companyService = serviceProxyRsi.create(CompanyService.class);
         String companyName = companyService.getCompanyName("mi");
         if(companyName == null){
-            return "未获取到用户名称";
+            return "未获取到公司名称";
         }else{
 
         }
