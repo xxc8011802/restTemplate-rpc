@@ -20,16 +20,16 @@ public interface Circuit
         return retry.get();
     }
 
-    //熔断装饰器
+    /**熔断装饰器*/
     <T> Supplier<T> decorateBreak(Supplier<T> supplier, CircuitConfig circuitConfig);
 
-    //重试装饰器
+    /**重试装饰器*/
     <T> Supplier<T> decorateRetry(Supplier<T> supplier, CircuitConfig circuitConfig);
 
-    //恢复装饰器
+    /**恢复装饰器*/
     <T> Try<T> decorateRecover(Supplier<T> supplier, Function<? super Throwable, ? extends T> f);
 
-    //限流装饰器
+    /**限流装饰器*/
     <T> Supplier<T> decorateLimit(Supplier<T> supplier, CircuitConfig circuitConfig);
 
 

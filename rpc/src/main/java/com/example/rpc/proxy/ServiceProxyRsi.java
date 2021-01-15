@@ -10,22 +10,17 @@ import com.example.rpc.circuit.CircuitConfig;
 import com.example.rpc.http.rest.RestClient;
 import com.example.rpc.util.ClassUtil;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
-import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
-import io.github.resilience4j.retry.Retry;
-import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestClientException;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -33,6 +28,8 @@ import static com.example.api.rpc.RpcResult.getFailResult;
 
 /**
  * rpc代理类，代理需要调用的方法，是的可以屏蔽底层的http调用，服务发现，序列化这些操作
+ *
+ * 添加了熔断 限流 重试 机制
  */
 
 public class ServiceProxyRsi

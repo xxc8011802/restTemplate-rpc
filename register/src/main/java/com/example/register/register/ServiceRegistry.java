@@ -8,6 +8,14 @@ public interface ServiceRegistry
 {
 
     /**
+     * 服务s上线初始化
+     *
+     * @param serviceName    服务名称
+     * @param serviceAddress 服务地址
+     */
+    void init(String serviceName, String serviceAddress);
+
+    /**
      * 注册服务
      *
      * @param serviceName    服务名称

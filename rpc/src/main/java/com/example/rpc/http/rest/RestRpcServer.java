@@ -76,7 +76,7 @@ public class RestRpcServer implements ApplicationContextAware, InitializingBean
         // 注册 RPC 服务地址
         if (serviceRegistry != null) {
             for (String interfaceName : handlerMap.keySet()) {
-                serviceRegistry.register(interfaceName, serviceAddress);
+                serviceRegistry.init(interfaceName, serviceAddress);
             }
         }
     }

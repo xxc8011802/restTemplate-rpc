@@ -11,4 +11,6 @@ public interface Constant
     int ZK_CONNECTION_TIMEOUT = 1000;
 
     String ZK_REGISTRY_PATH = "/registry";
+
+    String ZK_CONFIG_PATH = "/config1";
 }

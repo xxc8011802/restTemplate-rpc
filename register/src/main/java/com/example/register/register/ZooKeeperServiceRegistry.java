@@ -1,7 +1,9 @@
 package com.example.register.register;
 
+import com.alibaba.fastjson.JSON;
 import com.example.register.constant.Constant;
 import org.I0Itec.zkclient.IZkChildListener;
+import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.ZkConnection;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static com.example.register.constant.Constant.ZK_CONFIG_PATH;
 import static com.example.register.constant.Constant.ZK_REGISTRY_PATH;
 
 /**
@@ -21,25 +24,45 @@ public class ZooKeeperServiceRegistry implements ServiceRegistry {
 
     private final ZkClient zkClient;
 
+    //节点数据监听
+    private IZkDataListener dataListener;
+
     /**
      * 创建zk连接
      * @param zkAddress zk地址
      */
     public ZooKeeperServiceRegistry(String zkAddress) {
-        // 创建 ZooKeeper 客户端
-        zkClient = new ZkClient(zkAddress, Constant.ZK_SESSION_TIMEOUT, Constant.ZK_CONNECTION_TIMEOUT);
- /*       //服务监听 nodeList表示当前侦听的服务节点列表
-        zkClient.subscribeChildChanges(ZK_REGISTRY_PATH, new IZkChildListener()
+        this.dataListener = new IZkDataListener()
         {
+            /**
+             * @param s  节点
+             * @param o  节点值
+             * @throws Exception
+             */
             @Override
-            public void handleChildChange(String parentPath, List<String> currentChilds)
+            public void handleDataChange(String s, Object o)
                 throws Exception
             {
-                LOGGER.debug("child change ,currentChilds is" + parentPath + ":" + currentChilds);
-                System.out.println("[[child change ,currentChilds is" + parentPath + ":" + currentChilds + "]]");
+                System.out.println("node data change:[" + s + "]" + "[date:" + o + "]");
             }
-        });*/
+
+            @Override
+            public void handleDataDeleted(String s)
+                throws Exception
+            {
+                System.out.println("node data deleted:["+s+"]");
+            }
+        };
+        // 创建 ZooKeeper 客户端
+        zkClient = new ZkClient(zkAddress, Constant.ZK_SESSION_TIMEOUT, Constant.ZK_CONNECTION_TIMEOUT);
         LOGGER.debug("connect zookeeper");
+    }
+
+    @Override
+    public void init(String serviceName, String serviceAddress){
+        register(serviceName, serviceAddress);
+        //监听指定节点的数据变更
+        zkClient.subscribeDataChanges(ZK_CONFIG_PATH, dataListener);
     }
 
     /**
