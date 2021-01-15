@@ -62,7 +62,8 @@ public class ZooKeeperServiceRegistry implements ServiceRegistry {
     public void init(String serviceName, String serviceAddress){
         register(serviceName, serviceAddress);
         //监听指定节点的数据变更
-        zkClient.subscribeDataChanges(ZK_CONFIG_PATH, dataListener);
+        String path = ZK_CONFIG_PATH +"/" + serviceName;
+        zkClient.subscribeDataChanges(path, dataListener);
     }
 
     /**
@@ -85,10 +86,12 @@ public class ZooKeeperServiceRegistry implements ServiceRegistry {
             zkClient.createPersistent(servicePath);
             LOGGER.debug("create service node: {}", servicePath);
         }
+        String addressPath = servicePath + "/" + serviceAddress;
+        zkClient.createEphemeral(addressPath, serviceAddress);
         // 创建临时顺序节点 address（临时）,临时节点随着服务的断开则删除
-        String addressPath = servicePath + "/address-";
-        String addressNode = zkClient.createEphemeralSequential(addressPath, serviceAddress);
-        LOGGER.debug("create address node: {}", addressNode);
+        //String addressPath = servicePath + "/address-";
+        //String addressNode = zkClient.createEphemeralSequential(addressPath, serviceAddress);
+        //LOGGER.debug("create address node: {}", addressNode);
     }
 
     @Override

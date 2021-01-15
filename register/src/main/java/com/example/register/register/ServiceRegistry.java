@@ -8,7 +8,7 @@ public interface ServiceRegistry
 {
 
     /**
-     * 服务s上线初始化
+     * 服务启动初始化
      *
      * @param serviceName    服务名称
      * @param serviceAddress 服务地址

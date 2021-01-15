@@ -95,50 +95,52 @@ public class ServiceProxyRsi
                 //可以作为调用链查看
                 String requestId = UUID.randomUUID().toString();
                 //rpc调用逻辑
-                Supplier<RpcResult> supplier = new Supplier<RpcResult>()
+                Supplier<RpcResult> supplier = () ->
                 {
-                    @Override
-                    public RpcResult get()
-                    {
-                        RpcParams rpcParams = new RpcParams();
-                        rpcParams.setClassName(method.getDeclaringClass().getName());
-                        rpcParams.setMethodName(method.getName());
+                    RpcParams rpcParams = new RpcParams();
+                    rpcParams.setClassName(method.getDeclaringClass().getName());
+                    rpcParams.setMethodName(method.getName());
 
-                        //System.out.println("[[----Client generate RequestId"+ requestId + "----]]");
-                        rpcParams.setRequestId(requestId);
-                        //参数类型和参数值都转换为String传递
-                        rpcParams.setType(JSONObject.toJSONString(method.getParameterTypes()));
-                        rpcParams.setValues(JSONObject.toJSONString(args));
-                        // 获得服务的主机名和端口号，之后可通过服务发现的方式来获取服务的ip和端口号
-                        String host = "localhost";
-                        int port = 9091;
-                        String url="http://localhost:9091/";
-                        //服务发现
-                        if (serviceDiscovery != null) {
-                            String serviceName = interfaceClass.getName();
-                            if (StrUtil.isNotEmpty(serviceVersion)) {
-                                serviceName += "-" + serviceVersion;
-                            }
-                            serviceAddress = serviceDiscovery.discover(serviceName,"");
-                            url = "http://"+serviceAddress;
-                            LOGGER.debug("discover service: {} => {}", serviceName, serviceAddress);
-                        }
-                        if (StrUtil.isEmpty(serviceAddress)) {
-                            throw new RuntimeException("server address is empty");
-                        }
-                        // 创建 RPC 客户端对象并发送 RPC 请求 restTemplate
-                        RpcResult rpcResult = new RpcResult();
-                        try
+                    //System.out.println("[[----Client generate RequestId"+ requestId + "----]]");
+                    rpcParams.setRequestId(requestId);
+                    //参数类型和参数值都转换为String传递
+                    rpcParams.setType(JSONObject.toJSONString(method.getParameterTypes()));
+                    rpcParams.setValues(JSONObject.toJSONString(args));
+                    // 获得服务的主机名和端口号，之后可通过服务发现的方式来获取服务的ip和端口号
+                    String host = "localhost";
+                    int port = 9091;
+                    String url = "http://localhost:9091/";
+                    //服务发现
+                    if (serviceDiscovery != null)
+                    {
+                        String serviceName = interfaceClass.getName();
+                        if (StrUtil.isNotEmpty(serviceVersion))
                         {
-                            rpcResult= restClient.send(url,rpcParams);
-                        }catch (RestClientException exception){
+                            serviceName += "-" + serviceVersion;
                         }
-                        //如果请求响应为失败则抛出异常,业务异常应该会反应对应的错误码和错误信息
-                        if(!rpcResult.isSuccess()&&rpcResult.getMessage()==null){
-                            throw new RestClientException("Http Post Failed, RestClient Exception ");
-                        }
-                        return rpcResult;
+                        serviceAddress = serviceDiscovery.discover(serviceName);
+                        url = "http://" + serviceAddress;
+                        LOGGER.debug("discover service: {} => {}", serviceName, serviceAddress);
                     }
+                    if (StrUtil.isEmpty(serviceAddress))
+                    {
+                        throw new RuntimeException("server address is empty");
+                    }
+                    // 创建 RPC 客户端对象并发送 RPC 请求 restTemplate
+                    RpcResult rpcResult = new RpcResult();
+                    try
+                    {
+                        rpcResult = restClient.send(url, rpcParams);
+                    }
+                    catch (RestClientException exception)
+                    {
+                    }
+                    //如果请求响应为失败则抛出异常,业务异常应该会反应对应的错误码和错误信息
+                    if (!rpcResult.isSuccess() && rpcResult.getMessage() == null)
+                    {
+                        throw new RestClientException("Http Post Failed, RestClient Exception ");
+                    }
+                    return rpcResult;
                 };
 
                 //捕获异常后异常后处理逻辑
