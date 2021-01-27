@@ -5,7 +5,7 @@
     <import resource="classpath*:rpcserver.xml"></import>
 
     <!--restTemplate 通信的服务端处理类-->
-    <bean id="restRpcServer" class="com.example.rpc.http.rest.RestRpcServer">
+    <bean id="restRpcServer" class="com.example.rpc.http.rest.RestRpcServer" init-method="init">
         <constructor-arg name="serviceAddress" value="localhost:9091"/>
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>

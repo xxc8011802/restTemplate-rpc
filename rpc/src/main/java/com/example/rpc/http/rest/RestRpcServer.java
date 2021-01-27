@@ -4,7 +4,12 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.example.register.register.ServiceRegistry;
 import com.example.rpc.annotation.RpcService;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -14,7 +19,7 @@ import java.util.Map;
 /**
  * 存放接口和实现类的映射关系
  */
-public class RestRpcServer implements ApplicationContextAware, InitializingBean
+public class RestRpcServer implements ApplicationContextAware, InitializingBean,BeanNameAware,BeanFactoryAware
 {
     private static ApplicationContext applicationContext;
     /**
@@ -40,6 +45,20 @@ public class RestRpcServer implements ApplicationContextAware, InitializingBean
     {
         this.serviceAddress = serviceAddress;
         this.serviceRegistry = serviceRegistry;
+    }
+
+    public void init(){
+        System.out.println("init");
+    }
+
+
+    @Override
+    public void setBeanName(String var1){
+        System.out.println("setBeanName"+var1);
+    }
+
+    public void setBeanFactory(BeanFactory var1) throws BeansException{
+        System.out.println("setBeanFactory"+var1);
     }
 
     @Override
@@ -69,6 +88,7 @@ public class RestRpcServer implements ApplicationContextAware, InitializingBean
      */
     @Override
     public void afterPropertiesSet() throws Exception{
+        System.out.println("afterPropertiesSet");
         // 获取 RPC 服务器的 IP 地址与端口号
         String[] addressArray = StrUtil.split(serviceAddress, ":");
         String ip = addressArray[0];

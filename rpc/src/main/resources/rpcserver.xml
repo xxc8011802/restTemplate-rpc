@@ -8,6 +8,7 @@
         <constructor-arg name="zkAddress" value="localhost:2181"/>
     </bean>
 
+    <bean class="com.example.rpc.http.rest.PostPocessor"></bean>
     <!--netty 通信的服务端处理类-->
 <!--
     <bean id="rpcServer" class="com.example.rpc.http.netty.server.RpcServer">
